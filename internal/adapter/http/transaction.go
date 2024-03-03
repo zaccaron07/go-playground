@@ -22,7 +22,7 @@ func NewTransactionHandler(service port.TransactionService) *TransactionHandler 
 type createTransactionRequest struct {
 	Name          string    `json:"name"`
 	Amount        string    `json:"amount"`
-	TransactionAt time.Time `json:"transaction_at1"`
+	TransactionAt time.Time `json:"transaction_at"`
 }
 
 type createTransactionResponse struct {
