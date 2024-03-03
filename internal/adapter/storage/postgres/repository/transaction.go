@@ -20,8 +20,7 @@ func NewTransactionRepository(database *postgres.Database) *TransactionRepositor
 }
 
 func (transactionRepository *TransactionRepository) CreateTransaction(ctx context.Context, transaction *domain.Transaction) (*domain.Transaction, error) {
-	transactionQuery := `INSERT INTO transactions (name, amount, transactionAt) VALUES($1, $2, $3)`
-
+	transactionQuery := `INSERT INTO transactions (name, amount, transactionAt) VALUES($1, $2, $3) RETURNING *`
 	err := pgx.BeginFunc(ctx, transactionRepository.database, func(tx pgx.Tx) error {
 		err := tx.QueryRow(ctx, transactionQuery, transaction.Name, transaction.Amount, transaction.TransactionAt).Scan(
 			&transaction.Id,

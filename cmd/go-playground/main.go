@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go-playground/internal/adapter/config"
+	"go-playground/internal/adapter/http"
 	"go-playground/internal/adapter/storage/postgres"
 	"go-playground/internal/adapter/storage/postgres/repository"
 	"go-playground/internal/core/service"
@@ -34,5 +35,16 @@ func main() {
 
 	transactionRepository := repository.NewTransactionRepository(database)
 	transactionService := service.NewTransactionService(transactionRepository)
+	transactionHandler := http.NewTransactionHandler(transactionService)
 
+	router, err := http.NewRouter(*transactionHandler)
+	if err != nil {
+		slog.Error("Error initializing router", "error", err)
+		os.Exit(1)
+	}
+	err = router.Start("localhost:1323")
+	if err != nil {
+		slog.Error("Error starting the HTTP server", "error", err)
+		os.Exit(1)
+	}
 }
