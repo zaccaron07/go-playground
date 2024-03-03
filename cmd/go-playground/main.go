@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"go-playground/internal/adapter/config"
 	"go-playground/internal/adapter/storage/postgres"
+	"go-playground/internal/adapter/storage/postgres/repository"
+	"go-playground/internal/core/service"
 	"log/slog"
 	"os"
 )
@@ -28,6 +30,9 @@ func main() {
 		slog.Error("Error migrating database", "error", err)
 		os.Exit(1)
 	}
-
 	slog.Info("Successfully migrated the database")
+
+	transactionRepository := repository.NewTransactionRepository(database)
+	transactionService := service.NewTransactionService(transactionRepository)
+
 }
